@@ -18,5 +18,7 @@
 ## 上传
 - git push -u 本地仓库名 远程仓库名
 - git push -u origin master
+- 加 -u参数是第一次提交,以后提交就都可以把-u省去
 
 ## 以后遇到就补充
+
