@@ -10,6 +10,9 @@
 
 使用原生git语句是简单,然而使用VisualStudio,SublimeText,WebStorm等工具来提交确实不知道该怎么弄,也没时间一个一个研究过来,就在这儿把git语句总结下,以后都用语句提交好了.
 
+## VisualStudio提交到git
+- 先到源代码管理,点击那个小勾(commit),此时右下角那个循环标志会变成上下两个箭头,点击两个小箭头就可以完成上传
+
 ## 关联远程数据库,并命名为orgin
 - git remote add 命名远程仓库 远程仓库地址
 - git remote add origin https://github.com/XuanZhang-xl/Note.git
