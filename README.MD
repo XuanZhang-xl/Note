@@ -32,7 +32,9 @@
     - git branch dev    创建dev分支
     - git checkout dev  切换到dev分支
 - git branch 查看当前分支,*表明是当前分支
-- 
+- 严格上来说 vscode 并没有自带 Git , 而是自带了使用 Git 的功能。因为 vscode 使用的是你本地的 Git 。
+你的问题，**能不能合并、删除。答案是：不行的。**要么用功能齐全的 SourceTree 之类的 GUI 软件，要么用命令。
+编辑器的 Git 功能，主要是方便提交代码用的。
 
 
 ## 以后遇到就补充
