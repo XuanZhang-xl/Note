@@ -46,10 +46,8 @@
 - git reset --hard HEAD~100 回退到100个版本以前
 
 - git reset --hard 版本号 到指定版本号的版本,版本号没有必要写全,git会自动去找
-- 如果log中找不到想要的版本号(版本在当前HEAD之前)
-    - git reflog
-    - git reflog
-    - git reflog
+- 如果log中找不到想要的版本号(版本在当前HEAD之前),则使用命令:
+    - git reflog 记录le每一次命令,并且有每个命令的版本号的前7位,获取到版本号前7位后使用reset来进行版本设置.
 
 
 
