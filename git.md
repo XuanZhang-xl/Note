@@ -16,6 +16,7 @@
 ### <span id = '1'>IDE提交到git</span>
 - VisualStudio提交到git
     - 先到源代码管理,点击那个小勾(commit),此时右下角那个循环标志会变成上下两个箭头,点击两个小箭头就可以完成上传
+    - 严格上来说 vscode 并没有自带 Git , 而是自带了使用 Git 的功能。因为 vscode 使用的是你本地的 Git 。你的问题，**能不能合并、删除。答案是：不行的。**要么用功能齐全的 SourceTree 之类的 GUI 软件，要么用命令。编辑器的 Git 功能，主要是方便提交代码用的。
 
 ### <span id = '2'>把当前目录变成git可管理的仓库</span>
 - `git init` 瞬间Git就把仓库建好了,而且告诉你是一个空的仓库(empty Git repository),目录下多了一个.git的隐藏目录，这个目录是Git来跟踪管理版本库的,没事千万不要手动修改这个目录里面的文件.
@@ -38,6 +39,7 @@
 - `git log` 显示从最近到最远的**提交**日志
     - `git log --pretty=oneline` 一般使用这个命令查看日志,简介清晰,但是没有时间
     - log命令只显示到当前HEAD所在的版本
+- git branch 查看当前分支,前面带*表明是当前分支
 
 
 ### <span id = '5'>版本回退</span>
@@ -63,7 +65,7 @@
     - 一种是文件已经添加到暂存区后,又作了修改,撤销修改就回到添加到暂存区后的状态.
     - 总之,就是让这个文件回到最近一次git commit或git add时的状态  
 **注意:上面的checkout有--,下面的没有**  
-- `git checkout 分支`
+- `git checkout 分支` 请看[分支](#10)
 
 ### <span id = '7'>删除文件</span>
 - 如果是手动删除或`rm`命令删除,则有两个选择
@@ -89,14 +91,12 @@
 - **答:自己测**
 
 
-## <span id = '10'>分支</span>
-- git checkout -b dev 创建并切换到dev分支,相当于下边两条语句:
-    - git branch dev    创建dev分支
-    - git checkout dev  切换到dev分支
-- git branch 查看当前分支,*表明是当前分支
-- 严格上来说 vscode 并没有自带 Git , 而是自带了使用 Git 的功能。因为 vscode 使用的是你本地的 Git 。
-你的问题，**能不能合并、删除。答案是：不行的。**要么用功能齐全的 SourceTree 之类的 GUI 软件，要么用命令。
-编辑器的 Git 功能，主要是方便提交代码用的。
+### <span id = '10'>分支</span>
+- git checkout -b 分支名 创建并切换到新建的分支,相当于下边两条语句:
+    - git branch 分支名    创建新分支
+    - git checkout 分支名  切换到新分支
+- git branch 查看当前分支,前面带*表明是当前分支
+
 
 
 ## 以后遇到就补充
