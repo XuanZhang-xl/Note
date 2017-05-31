@@ -8,9 +8,9 @@
 - [版本回退](#5)
 - [checkout检出](#6)
 - [删除文件](#7)
-- [远程数据库/SSH](#8)
-- [](#4)
-- [](#4)
+- [SSH/关联远程数据库](#8)
+- [同步远程](#9)
+- [分支](#10)
 - [](#4)
 
 ### <span id = '1'>IDE提交到git</span>
@@ -72,22 +72,24 @@
 
 
 
-### <span id = '8'>远程数据库/SSH</span>
+### <span id = '8'>SSH/关联远程数据库</span>
 - ssh-keygen -t rsa -C "邮箱地址" 然后一路回车即可.在用户主目录下,会生成.ssh目录,里面有id_rsa(私钥)和id_rsa.pub(公钥)这两个文件,然后请参考[ssh攻略](http://www.liaoxuefeng.com/wiki/0013739516305929606dd18361248578c67b8067c8c017b000/001374385852170d9c7adf13c30429b9660d0eb689dd43a000)
-- `git remote add 命名远程仓库 远程仓库地址`
-- `git remote add origin https://github.com/XuanZhang-xl/Note.git`
+- **`git remote add 命名远程仓库 远程仓库地址`**    如:
+    - `git remote add origin https://github.com/XuanZhang-xl/Note.git`  远程仓库命名为orgin
+    - **问:https://github.com/XuanZhang-xl/Note.git与git@github.com:XuanZhang-xl/Note.git有什么区别?**
+    - **答:Git支持多种协议，默认的git://使用ssh,但也可以使用https等其他协议,使用https除了速度慢以外,还有个最大的麻烦是每次推送都必须输入口令,但是在某些只开放http端口的公司内部就无法使用ssh协议而只能用https.**
+
+### <span id = '9'>同步远程</span>
+- `git push -u 本地仓库名 远程仓库名` 把本地仓库推送到远程,如:
+    - `git push -u origin master` 实际上是把当前分支master推送到远程.
+    - 加-u参数是第一次提交,Git不但会把本地的master分支内容推送的远程新的master分支,还会把本地的master分支和远程的master分支关联起来,以后提交就都可以把-u省去.
+    - **`git push origin master`**
+- `git clone 远程仓库` 克隆一个远程仓库到本地
+- **问:要是本地的仓库本来就有东西,会变成怎么样?**
+- **答:自己测**
 
 
-## 上传文件到本地
-- git add readme.txt 
-- git commit -m "branch test"
-
-## 同步远程
-- git push -u 本地仓库名 远程仓库名
-- git push -u origin master
-- 加-u参数是第一次提交,以后提交就都可以把-u省去
-
-## 打分支
+## <span id = '10'>分支</span>
 - git checkout -b dev 创建并切换到dev分支,相当于下边两条语句:
     - git branch dev    创建dev分支
     - git checkout dev  切换到dev分支
