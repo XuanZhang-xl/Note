@@ -39,7 +39,7 @@
 - `git log` 显示从最近到最远的**提交**日志
     - `git log --pretty=oneline` 一般使用这个命令查看日志,简介清晰,但是没有时间
     - log命令只显示到当前HEAD所在的版本
-- git branch 查看当前分支,前面带*表明是当前分支
+- `git branch` 列出所有分支,前面带*表明是当前分支
 
 
 ### <span id = '5'>版本回退</span>
@@ -95,7 +95,8 @@
 - `git checkout -b 分支名` 创建并切换到新建的分支,相当于下边两条语句:
     - `git branch 分支名`    创建新分支
     - `git checkout 分支名`  切换到新分支
-- git branch 查看当前分支,前面带*表明是当前分支
+- `git branch` 列出所有分支,前面带*表明是当前分支
+- `git merge` 命令用于合并指定分支到当前分支
 
 
 
