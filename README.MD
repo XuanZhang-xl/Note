@@ -18,10 +18,22 @@
 - git remote add origin https://github.com/XuanZhang-xl/Note.git
 
 
-## 上传
+## 上传文件到本地
+- git add readme.txt 
+- git commit -m "branch test"
+
+## 同步远程
 - git push -u 本地仓库名 远程仓库名
 - git push -u origin master
 - 加-u参数是第一次提交,以后提交就都可以把-u省去
+
+## 打分支
+- git checkout -b dev 创建并切换到dev分支,相当于下边两条语句:
+    - git branch dev    创建dev分支
+    - git checkout dev  切换到dev分支
+- git branch 查看当前分支,*表明是当前分支
+- 
+
 
 ## 以后遇到就补充
 
