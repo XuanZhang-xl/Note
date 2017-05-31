@@ -1,4 +1,4 @@
-# gitTest
+# Note
 
 嘛,还是用git写笔记最好了
 
