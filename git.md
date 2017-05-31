@@ -43,6 +43,7 @@
     - `git log --pretty=oneline` 一般使用这个命令查看日志,简介清晰,但是没有时间
     - log命令只显示到当前HEAD所在的版本
     - `git log --graph --pretty=oneline --abbrev-commit` 这个命令可以查看分支/合并分支的日志
+    - `git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"` 查看日志最终形态,只要输入`git lg`就好.
 - `git branch` 列出所有分支,前面带*表明是当前分支
 - `git remote` 查看远程仓库的信息.
 - `git remote -v` 查看远程仓库详细信息,如果没有推送权限,就看不到push的地址
@@ -149,3 +150,8 @@
     - [.gitignore配置大本营](https://github.com/github/gitignore),直接copy里面合适的文件就可以了.
 - 配置命令的别名
     - `git config --global alias.st status` 使用st代替status,以后只要写`git st`就可以代表`git status`
+    - `git config --global alias.lg "log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit"` 查看日志最终形态,只要输入`git lg`就好.
+
+- 配置文件
+    - 配置Git的时候，加上--global是针对当前用户起作用的,如果不加,那只针对当前的仓库起作用,每个仓库的Git配置文件都放在.git/config文件中. 别名就在[alias]后面,要删除别名,直接把对应的行删掉即可.
+    - 当前用户的Git配置文件放在用户主目录下的一个隐藏文件.gitconfig中,修改同上.
