@@ -96,8 +96,8 @@
     - `git branch 分支名`    创建新分支
     - `git checkout 分支名`  切换到新分支
 - `git branch` 列出所有分支,前面带*表明是当前分支
-- `git merge` 命令用于合并指定分支到当前分支
+- `git merge` 命令用于合并指定分支到当前分支,这种合并是“快进模式(Fast-forward)”，也就是直接把master指向dev的当前提交，所以合并速度非常快。
 
-
+- `git branch -d 分支名` 删除分支
 
 ## 以后遇到就补充
