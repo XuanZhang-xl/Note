@@ -92,9 +92,9 @@
 
 
 ### <span id = '10'>分支</span>
-- git checkout -b 分支名 创建并切换到新建的分支,相当于下边两条语句:
-    - git branch 分支名    创建新分支
-    - git checkout 分支名  切换到新分支
+- `git checkout -b 分支名` 创建并切换到新建的分支,相当于下边两条语句:
+    - `git branch 分支名`    创建新分支
+    - `git checkout 分支名`  切换到新分支
 - git branch 查看当前分支,前面带*表明是当前分支
 
 
