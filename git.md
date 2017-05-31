@@ -1,0 +1,62 @@
+## Git的使用命令
+
+**尽量不要用IDE集成的git管理工具来操作,直接写git命令更佳,因为如果用git管理工具,那么换个工具就又要重新学过**
+- [IDE提交到git](#1)
+- [把当前目录变成git可管理的仓库](#2)
+- [把文件添加/提交到版本库(本地)](#3)
+- [查看状态](#4)
+- [](#4)
+- [](#4)
+- [](#4)
+- [](#4)
+- [](#4)
+- [](#4)
+
+### <span id = '1'>IDE提交到git</span>
+- VisualStudio提交到git
+    - 先到源代码管理,点击那个小勾(commit),此时右下角那个循环标志会变成上下两个箭头,点击两个小箭头就可以完成上传
+
+### <span id = '2'>把当前目录变成git可管理的仓库</span>
+- git init
+- 瞬间Git就把仓库建好了,而且告诉你是一个空的仓库(empty Git repository),目录下多了一个.git的隐藏目录，这个目录是Git来跟踪管理版本库的,没事千万不要手动修改这个目录里面的文件.
+
+### <sapn id = '3'>把文件添加/提交到版本库(本地)</span>
+- 步骤一: git add 文件名1 文件名2 文件名3
+- 步骤二: git commit -m "注释内容"
+- 注意:
+    - add可以一次add很多文件,文件名中间用空格隔开,commit一次性把所有add的文件提交.
+    - 提交更新也是使用add
+- **问题:add了之后,git就可以追踪还是得commit了之后才能追踪?**
+
+### <span id = '4'>查看状态</span>
+- git status 查看当前仓库状态
+- git diff 文件名 查看这个文件和仓库中的有什么变化,建议每次提交前都先使用此命令查看
+- git log 显示从最近到最远的**提交**日志
+    - git log --pretty=oneline 一般使用这个命令查看日志,简介清晰,但是没有时间
+
+
+## 关联远程数据库,并命名为orgin
+- git remote add 命名远程仓库 远程仓库地址
+- git remote add origin https://github.com/XuanZhang-xl/Note.git
+
+
+## 上传文件到本地
+- git add readme.txt 
+- git commit -m "branch test"
+
+## 同步远程
+- git push -u 本地仓库名 远程仓库名
+- git push -u origin master
+- 加-u参数是第一次提交,以后提交就都可以把-u省去
+
+## 打分支
+- git checkout -b dev 创建并切换到dev分支,相当于下边两条语句:
+    - git branch dev    创建dev分支
+    - git checkout dev  切换到dev分支
+- git branch 查看当前分支,*表明是当前分支
+- 严格上来说 vscode 并没有自带 Git , 而是自带了使用 Git 的功能。因为 vscode 使用的是你本地的 Git 。
+你的问题，**能不能合并、删除。答案是：不行的。**要么用功能齐全的 SourceTree 之类的 GUI 软件，要么用命令。
+编辑器的 Git 功能，主要是方便提交代码用的。
+
+
+## 以后遇到就补充
