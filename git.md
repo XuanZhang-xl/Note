@@ -109,5 +109,11 @@
     - 干活都在dev分支上,也就是说,dev分支是不稳定的,到某个时候,比如1.0版本发布时,再把dev分支合并到master上,在master分支发布1.0版本.
     - 你和你的小伙伴们每个人都在dev分支上干活,每个人都有自己的分支,时不时地往dev分支上合并就可以了.
     ![分支策略](pic/gitbranchstrategy.png)
+- bug分支,每个bug都可以通过一个新的临时分支来修复,修复后,合并分支,然后将临时分支删除,通常命名为`issue-bug代号`
+    - **`git stash`** 如果工作到一半,不能继续做,也不想提交,则使用此命令吧当前代码存储起来,那么当前工作区会回到这个版本的初始状态
+    - `git stash list` 查看有没有保存的工作.
+    - `git stash apply` 恢复之前的工作,但是stash内的内容并不删除,通过`git stash drop`来删除
+    - **`git stash pop`** 恢复之前的工作并删除stash
+    - 可以多次使用stash,恢复的时候，先用`git stash list`查看，然后使用命令`git stash apply stash@{0}`恢复指定的stash.
 
 ## 以后遇到就补充
