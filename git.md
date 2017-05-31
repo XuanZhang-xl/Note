@@ -61,9 +61,16 @@ My stupid boss still prefers SVN.
 - git checkout -- 文件名 分两种情况
     - 一种是文件自修改后还没有被放到暂存区，现在，撤销修改就回到和版本库一模一样的状态.
     - 一种是文件已经添加到暂存区后,又作了修改,撤销修改就回到添加到暂存区后的状态.
-    - 总之,就是让这个文件回到最近一次git commit或git add时的状态
-**注意:上面的checkout有--,下面的没有**
+    - 总之,就是让这个文件回到最近一次git commit或git add时的状态  
+**注意:上面的checkout有--,下面的没有**  
 - git checkout 分支
+
+### <span id = '7'>删除文件</span>
+- 如果是手动删除或`rm`命令删除,则有两个选择
+    - 如果确实要删掉: `git rm 文件名` 并且提交: `git commit -m '删除了文件'`
+    - 如果是误删除了: `git checkout -- 文件名` 则检出文件就可以了
+
+
 
 ## 关联远程数据库,并命名为orgin
 - git remote add 命名远程仓库 远程仓库地址
