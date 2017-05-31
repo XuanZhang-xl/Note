@@ -12,6 +12,7 @@
 - [同步远程](#9)
 - [分支](#10)
 - [标签管理](#11)
+- [自定义Git](#12)
 
 ### <span id = '1'>IDE提交到git</span>
 - VisualStudio提交到git
@@ -137,5 +138,13 @@
         - `git tag -d v0.9` 先删除本地标签
         - `git push origin :refs/tags/v0.9` 固定格式就是这样
 
-
-## 以后遇到就补充
+### <span id = '12'>自定义Git</span>
+- `git config --global color.ui true` 让git显示颜色
+    - --global参数是全局参数,也就是这些命令在这台电脑的所有Git仓库下都有用.
+- .gitignore
+    - 如果想添加一个文件到Git,但发现添加不了,原因很有可能是这个文件被.gitignore忽略了.
+    - 如果确实想添加这个文件,`git add -f 文件名` -f表示强制添加
+    - 如果觉得是.gitignore的问题,`git check-ignore -v 文件名` 检查到底是哪条.gitignore阻止了文件的添加
+    - [.gitignore配置大本营](https://github.com/github/gitignore),直接copy里面合适的文件就可以了.
+- 配置命令的别名
+    - `git config --global alias.st status` 使用st代替status,以后只要写`git st`就可以代表`git status`
