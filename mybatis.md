@@ -269,7 +269,7 @@ public class UserMapperTest {
     
     ![environment](pic/mybatisenvironment.png)
 
-- databaseIdProvider 数据哭厂商标识
+- databaseIdProvider 数据库厂商标识
 - mapper 映射器
     ```
     <mappers>
