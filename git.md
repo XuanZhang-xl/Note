@@ -48,6 +48,8 @@
 - git reset --hard 版本号 到指定版本号的版本,版本号没有必要写全,git会自动去找
 - 如果log中找不到想要的版本号(版本在当前HEAD之前)
     - git reflog
+    - git reflog
+    - git reflog
 
 
 
