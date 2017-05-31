@@ -43,7 +43,8 @@
     - log命令只显示到当前HEAD所在的版本
     - `git log --graph --pretty=oneline --abbrev-commit` 这个命令可以查看分支/合并分支的日志
 - `git branch` 列出所有分支,前面带*表明是当前分支
-
+- `git remote` 查看远程仓库的信息.
+- `git remote -v` 查看远程仓库详细信息,如果没有推送权限,就看不到push的地址
 
 ### <span id = '5'>版本回退</span>
 **----------->请先保存当前版本再进行以下操作,否则出事概不负责!<------------**  
