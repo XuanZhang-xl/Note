@@ -34,6 +34,7 @@
 - git log 显示从最近到最远的**提交**日志
     - git log --pretty=oneline 一般使用这个命令查看日志,简介清晰,但是没有时间
 
+### 版本回退
 
 ## 关联远程数据库,并命名为orgin
 - git remote add 命名远程仓库 远程仓库地址
