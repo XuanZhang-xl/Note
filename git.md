@@ -102,6 +102,7 @@
 - `git merge` 命令用于合并指定分支到当前分支,这种合并是“快进模式(Fast-forward)”，也就是直接把master指向dev的当前提交，所以合并速度非常快。
     - 如果合并的两个分支的版本号不一致,且都做了修改,那么就有可能产生冲突(conflict),git会把冲突的代码都列出来,供我们解决冲突.解决完后,**需要再次add与commit**才能结束此次合并.
 - `git branch -d 分支名` 删除分支
+- `git branch -D 分支名` 强行删除分支
 - `git merge --no-ff -m "merge with no-ff" 分支名` 不用快进模式进行合并.
     - 加上--no-ff参数就可以用普通模式合并,合并后的历史有分支,能看出来曾经做过合并,而fast forward合并就看不出来曾经做过合并.
 - 分支策略
@@ -115,5 +116,7 @@
     - `git stash apply` 恢复之前的工作,但是stash内的内容并不删除,通过`git stash drop`来删除
     - **`git stash pop`** 恢复之前的工作并删除stash
     - 可以多次使用stash,恢复的时候，先用`git stash list`查看，然后使用命令`git stash apply stash@{0}`恢复指定的stash.
+- feature分支,每添加一个新功能,最好新建一个feature分支,在上面开发,完成后,合并,最后删除该feature分支.
+
 
 ## 以后遇到就补充
