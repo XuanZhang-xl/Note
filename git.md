@@ -41,6 +41,7 @@
 - `git log` 显示从最近到最远的**提交**日志
     - `git log --pretty=oneline` 一般使用这个命令查看日志,简介清晰,但是没有时间
     - log命令只显示到当前HEAD所在的版本
+    - `git log --graph --pretty=oneline --abbrev-commit` 这个命令可以查看分支/合并分支的日志
 - `git branch` 列出所有分支,前面带*表明是当前分支
 
 
@@ -99,7 +100,8 @@
     - `git checkout 分支名`  切换到新分支
 - `git branch` 列出所有分支,前面带*表明是当前分支
 - `git merge` 命令用于合并指定分支到当前分支,这种合并是“快进模式(Fast-forward)”，也就是直接把master指向dev的当前提交，所以合并速度非常快。
+    - 如果合并的两个分支的版本号不一致,且都做了修改,那么就有可能产生冲突(conflict),git会把冲突的代码都列出来,供我们解决冲突.解决完后,**需要再次add与commit**才能结束此次合并.
 - `git branch -d 分支名` 删除分支
-- 冲突已修复
+- 
 
 ## 以后遇到就补充
