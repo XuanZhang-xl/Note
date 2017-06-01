@@ -310,6 +310,14 @@
 - resultMap结果集映射
 
 - cache/cache-ref 缓存
+    - 一级缓存默认就是开启的, 并且无法关闭.
+        - 作用域是当前的session.
+        - 一次openSession()后, 如果**相同的statement和相同参数**, 则不进行查询而是从缓存命中并且返回，如果没有命中则查询数据库.
+        - 任何的增删改操作都会导致缓存被清空
+        - 缓存默认会使用 Least Recently Used(LRU,最近最少使用的)算法来收回
+    - 二级缓存需要手动开启, 开启的方式是在Mapper.xml中添加标签: <cache/>, 二级缓存的作用域是整个SessionFactory, 并且是同一个Mapper中, 如果namespace, statement和SQL参数一致, 则缓存命中.
+
+
 
 
 ### <span id = '5'>#{}与${}区别与联系</span>
@@ -350,6 +358,7 @@
 
 ### <span id = '7'>动态SQL</span>
 **如果使用了动态SQL,则必须在方法的参数上加@Param,否则报错**  
+**<>等符号在动态SQL里需要用实体表示**  
 
 - Mybatis提供了使用OGNL表达式来动态生成SQL的功能,动态SQL有:
 - if
@@ -374,10 +383,56 @@
         </otherwise>
     </choose>
 
-- where, set
+- where
+----
+    SELECT * FROM tb_user
+    <!--where的作用就是检测SQL语句,排除多余的'AND', 避免sql语法错误-->
+    <where>
+        <if test="name !=null and name.trim()!=''">
+            AND name like "%${name}%"
+        </if>
+        <if test="age != null">
+            AND age &lt; #{age}
+        </if>
+    </where>
 
+- set
+----
+    UPDATE tb_user
+        <!--set标签会自动校验语法错误,多余的','会被除去-->
+        <set>
+            <if test="userName !=null and userName.trim()!=''">
+                user_Name = #{userName},
+            </if>
+            <if test="password !=null and password.trim()!=''">
+                password = #{password},
+            </if>
+            <if test="name !=null and name.trim()!=''">
+                name = #{name},
+            </if>
+            <if test="age != null">
+                age = #{age},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="birthday != null">
+                birthday = #{birthday},
+            </if>
+        </set>
+    WHERE 
+        id = #{id}
 - foreach
-
+----
+    SELECT * from tb_user WHERE id IN
+    <!--
+        在代码中传了一个名称为ids的List进去
+        collection:集合的名称,如果使用了Param注解,这里就是注解中的值
+        item:遍历取到的元素
+    -->
+    <foreach collection="ids" item = "id" separator="," open="(" close=")">
+        #{id}
+    </foreach>
 
 
 
