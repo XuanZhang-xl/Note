@@ -348,7 +348,35 @@
 
 
 
+### <span id = '7'>动态SQL</span>
+**如果使用了动态SQL,则必须在方法的参数上加@Param,否则报错**  
 
+- Mybatis提供了使用OGNL表达式来动态生成SQL的功能,动态SQL有:
+- if
+----
+    select * from tb_user where sex = 1 
+    <if test="name !=null and name.trim()!=''">
+        and name like "%${name}%"
+    </if>
+    <!--这里使用了"%${name}%"来拼接SQL, 这样在传参数时, 只写姓名就可以模糊查询-->
+- choose, when, otehrwise
+----
+    select * from tb_user 
+    <choose>
+        <when test="orderType == 0">
+            order by age asc
+        </when>
+        <when test="orderType == 1">
+            order by age desc
+        </when>
+        <otherwise>
+            order by id asc
+        </otherwise>
+    </choose>
+
+- where, set
+
+- foreach
 
 
 
