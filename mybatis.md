@@ -234,7 +234,7 @@
     - 用于引用外部属性文件,如jdbc.properties
     - 使用${}来获取外部引用文件中的属性
 - settings设置,会改变 MyBatis 的运行时行为
-    - cacheEnable 所有映射器重配置的缓存的全局开关,默认true.
+    - cacheEnable 所有映射器重配置的二级缓存的全局开关,默认true.
     - lazyLodingEnable 延迟加载开关,当开启时,所有关联对象都会延迟加载。特定关联关系中可通过设置fetchType属性来覆盖该项的开关状态。默认false.
     - aggressiveLazyLoading 当启用时,带有延迟加载属性的对象的加载与否完全取决于对任意延迟属性的调用,反之,每种属性将会按需加载。默认true.
     - multipleResultSetsEnabled 是否允许单一语句返回多结果集（需要兼容驱动）默认true
@@ -315,8 +315,8 @@
         - 一次openSession()后, 如果**相同的statement和相同参数**, 则不进行查询而是从缓存命中并且返回，如果没有命中则查询数据库.
         - 任何的增删改操作都会导致缓存被清空
         - 缓存默认会使用 Least Recently Used(LRU,最近最少使用的)算法来收回
-    - 二级缓存需要手动开启, 开启的方式是在Mapper.xml中添加标签: <cache/>, 二级缓存的作用域是整个SessionFactory, 并且是同一个Mapper中, 如果namespace, statement和SQL参数一致, 则缓存命中.
-
+    - 二级缓存需要手动开启, 开启的方式是在Mapper.xml中添加标签: <cache/>, 二级缓存的作用域是整个SessionFactory, 并且是同一个Mapper中, 如果namespace, statement和SQL参数一致, 则缓存命中. 
+![二级缓存配置](pic/mybatislevel2cacheconfig.png)
 
 
 
@@ -433,6 +433,18 @@
     <foreach collection="ids" item = "id" separator="," open="(" close=")">
         #{id}
     </foreach>
+
+### <span id = '8'>高级查询</span>
+- 先来个关系图
+![关系图](pic/mybatisorderuserrelationship.png)
+- 一对一查询: 一个订单只属于一个用户. 需求1：查询订单的同时, 查询出订单所属用户
+    - 扩展Order类,在其中维护一个User类型
+
+- 一对多查询: 一个订单可以有多个订单详情. 需求2:查询订单,并且查询出所有订单详情及所属用户
+
+- 多对多查询: 订单中可以有多个商品, 商品也可以属于多个订单. 需求3: 查询订单, 查询出所属用户, 并且查询出订单的详情, 及订单详情中的对应的商品信息. 
+
+
 
 
 
