@@ -3,7 +3,7 @@
 - [1. SpringMVC与MVC简介](#1)  
 - [2. 配置文件](#2)  
 - [3. 注解](#3)  
-- [](#4)  
+- [4. RequestMapping请求映射方式](#4)  
 - [](#5)  
 
 ## <span id = '1'>1. SpringMVC与MVC简介</span>
@@ -138,6 +138,28 @@
             mv.addObject("msg", "我的第一个SpringMVC程序");
             return mv;
         }
+    }
+
+- 注解驱动的最终配置方式就是: 
+    - 1. 开启注解驱动
+    - 2. 开启扫描包
+    - 3. 配置内部资源解析器
+
+## <span id = '4'>4. RequestMapping请求映射方式</span>
+    //通过Controller注解表明这是一个控制器类
+    @Controller
+    //可写可不写,写了就要在访问路径中加上/TestController,这里配置的时候/可加可不加,如果不加会自动补全.
+    @RequestMapping("TestController")
+    public class TestController {
+
+        //通过RequestMapping定义当前方法的映射路径,在浏览器中通过这个路径访问这个方法
+        //http://localhost/show1.do
+        @RequestMapping("show1")
+        public ModelAndView show1(){
+            ModelAndView mv = new ModelAndView("hello");
+            mv.addObject("msg", "我的第一个SpringMVC程序");
+            return mv;
+        }
 
         //Ant风格路径映射
         /**
@@ -181,26 +203,277 @@
         */
         @RequestMapping(value = "show5",params = "id")
         //方法中可以通过@RequestParam方式获取请求参数
-        public ModelAndView show5(@RequestParam("id")Long id){
+        public ModelAndView show5(Long id,String name){
             ModelAndView mv = new ModelAndView("hello");
-            mv.addObject("msg", "请求成功!你输入的ID为:"+id);
+        mv.addObject("msg", "请求成功!你输入的ID为:"+id+"name为:"+name);
             return mv;
         }
     }
 
-- 注解驱动的最终配置方式就是: 
-    - 1. 开启注解驱动
-    - 2. 开启扫描包
-    - 3. 配置内部资源解析器
+## <span id = '4'>4. 视图解析</span>
+- 视图就是展示给用户看的结果. 可以是很多形式, 例如: html, JSP, excel表单, Word文档, PDF文档, JSON数据, freemarker模板视图等等.
+- 默认使用的InternalResourceViewResolver解析器, 支持JSP, 可以结合JSTL和EL来将数据展示到页面
+- json视图需要引入依赖包,比如JackJson
+----
+
+        //使用JSP视图渲染模型数据
+        @RequestMapping(value = "show7")
+        public ModelAndView show7(){
+            ModelAndView mv = new ModelAndView("user-list");
+            //创建用户列表,用于显示页面
+            /*ArrayList<User> users = new ArrayList<User>();
+            for (int i = 0; i < 10; i++){
+                User user = new User();
+                user.setId((long)i);
+                user.setAge(20+i);
+                user.setName("张三"+i);
+                user.setUsername("zhangsan"+i);
+                users.add(user);
+            }*/
+            List<User> users = show8();//show8重复代码,这样写可以吗?
+            mv.addObject("users",users);
+            return mv;
+        }
+
+        // 返回JSON视图
+        @RequestMapping(value = "show8")
+        // 这里没有返回ModelAndView,而是通过ResponseBody注解声明,返回的是JSON视图
+        // SpringMVC会自动把返回值,这儿是List<User>转换为JSON格式返回
+        @ResponseBody
+        public List<User> show8(){
+            ArrayList<User> users = new ArrayList<User>();
+            for (int i = 0; i < 10; i++){
+                User user = new User();
+                user.setId((long)i);
+                user.setAge(20+i);
+                user.setName("张三"+i);
+                user.setUsername("zhangsan"+i);
+                users.add(user);
+            }
+            return users;
+        }
+
+        // 直接返回视图名称
+        @RequestMapping(value = "show9")
+        // 可以直接在这儿写参数,SpringMVC会自动注入
+        public String show9(Model model){
+            model.addAttribute("msg","试试model好不好用......");
+
+            // 如果只是访问页面,就不需要创建MiodelAndView对象,只是返回一个字符串就好
+            // 这个字符串就会作为视图的名称,从而访问到对应的页面
+            return "index";
+        }
+
+        /*重定向与转发*/
+
+        //重定向
+        @RequestMapping(value = "show10")
+        public String show10(){
+            // 返回值以redirect: 开头,就是重定向,但是后面必须跟上url路径而非视图名
+            return "redirect:/TestController/show9.do";
+        }
+        //转发
+        @RequestMapping(value = "show11")
+        public String show11(){
+            // 返回值以forward: 开头,就是转发,但是后面必须跟上url路径而非视图名
+            return "forward:/TestController/show9.do";
+        }
+
+        //不返回视图
+        @RequestMapping(value = "show12")
+        @ResponseStatus(HttpStatus.OK)
+        // 如果写了void, 代表不返回视图, 那么就需要加ResponseStatus, 返回一个状态码
+        public void show12(){
+            System.out.println("请求已收到");
+        }
 
 
+## <span id = '5'>5. 请求参数绑定和获取</span>
 
+        @RequestMapping("show13")
+        //添加在方法参数列表中的参数,都会被SpringMVC自动注入,我们只管使用就可以.
+        public String show13(HttpServletRequest req, HttpServletResponse resp, HttpSession session){
+            //使用request对象保存数据
+            req.setAttribute("msg1", "我是request,我添加了一条数据:"+req);
+            req.setAttribute("msg2", "我是response,我添加了一条数据:"+ resp);
+            //session对象保存数据
+            session.setAttribute("msg3", "我是session,添加了数据"+session);
+            return "servlet-test";
+        }
 
+        //获取PathVariable参数
+        @RequestMapping("show14/{age}/{name}")
+        public ModelAndView show14(@PathVariable("age") Long age, @PathVariable("name") String name){
+            ModelAndView mv = new ModelAndView("hello");
+            mv.addObject("msg", "占位符映射,age: "+ age + ", name: "+name);
+            return mv;
+        }
 
+        // 获取表单参数
+        @RequestMapping("show15")
+        @ResponseStatus(HttpStatus.OK)
+        public void show15(@RequestParam("name") String name,
+                        @RequestParam("age") Integer age,
+                        @RequestParam("income") Double income,
+                        @RequestParam("isMarried") Boolean isMarried,
+                        @RequestParam("interests") String[] interests) {
+            System.out.println("name： " + name);
+            System.out.println("age： " + age);
+            System.out.println("income： " + income);
+            System.out.println("isMarried： " + isMarried);
+            System.out.println("interests： " + Arrays.toString(interests));
+        }
 
+        //获取请求参数并封装为pojo对象
+        @RequestMapping("show16")
+        public ModelAndView show16(User user){
+            ModelAndView mv = new ModelAndView("hello");
+            mv.addObject("msg", "接收不同参数:user"+user);
+            return mv;
+        }
 
+        /*@RequestParam扩展
+        * @RequestParam参数:
+        * 1. value: 参数名
+        * 2. required: 是否必须, 默认为true
+        * 3. defaultVaule: 默认参数值
+        * */
+        @RequestMapping("show17")
+        public ModelAndView show17(@RequestParam(value = "name", required = false, defaultValue = "狗蛋") String name){
+            ModelAndView mv = new ModelAndView("hello");
+            mv.addObject("msg", "接收普通参数: "+name);
+            return mv;
+        }
 
+        //获取cookie的值
+        @RequestMapping("show18")
+        public ModelAndView show18(@CookieValue("JSESSIONID") String jsessionid){
+            ModelAndView mv = new ModelAndView("hello");
+            mv.addObject("msg", "接收cookie值: "+jsessionid);
+            return mv;
+        }
 
+        /*接收对象中的List集合的写法
+        <form action="/TestController/show19.do" method="post">
+            用户1：<input type="text" name="users[0].name"/><br/>
+            用户2：<input type="text" name="users[1].name"/><br/>
+            用户3：<input type="text" name="users[2].name"/><br/>
+            <input type="submit">
+        </form>
+        *
+        * 上面的表单相当于同时提交了3个用户,也就是用户的集合,需要定义一个对象,对象中定义一个List<User>属性.
+        *
+        * */
+        //获取cookie的值
+        @RequestMapping("show19")
+        public ModelAndView show19(UserForm userForm){
+            ModelAndView mv = new ModelAndView("hello");
+            mv.addObject("msg", "接收对象参数: "+ userForm);
+            return mv;
+        }
+
+        //接收json格式的请求,可以把json字符串转为pojo对象
+        /*@ResponseBody是把返回值的POJO对象变为JSON字符串,称为序列化
+        * @RequestBody是把接收到的JSON字符串变为POJO对象,称为反序列化
+        * */
+        @RequestMapping("show20")
+        @ResponseStatus(HttpStatus.OK)
+        public void show20(@RequestBody() User user){
+            System.out.println("id: "+user.getId());
+            System.out.println("name: "+user.getName());
+            System.out.println("age: "+user.getAge());
+        }
+
+        /*
+        * 可以接收JSON字符串数组
+        * */
+        @RequestMapping("show21")
+        @ResponseStatus(HttpStatus.OK)
+        public void show21(@RequestBody() List<User> users){
+            for (User user : users) {
+                System.out.println("id: "+user.getId());
+                System.out.println("name: "+user.getName());
+                System.out.println("age: "+user.getAge());
+            }
+        }
+
+## <span id = '6'>6. 文件上传</span>
+- 底层也是使用的Apache的Commons-fileupload
+- 需要在配置文件中添加文件上传解析器
+----
+    <!-- 定义文件上传解析器 -->
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+    <!-- 设定默认编码 -->
+    <property name="defaultEncoding" value="UTF-8"></property>
+    <!-- 设定文件上传的最大值5MB，5*1024*1024 -->
+    <property name="maxUploadSize" value="5242880"></property>
+    </bean>
+
+- 编写cntroller控制器中的代码
+----
+
+    //文件上传
+    @RequestMapping("show22")
+    public ModelAndView show22(@RequestParam("file") MultipartFile file) throws Exception{
+        ModelAndView mv = new ModelAndView("hello");
+        if(file != null){
+            //将上传得到的文件,转移到指定文件.
+            file.transferTo(new File("D:/07_temp/"+file.getOriginalFilename()));
+        }
+        mv.addObject("msg", file.getOriginalFilename()+"上传成功!");
+        return mv;
+    }
+
+## <span id = '7'>7. 拦截器</span>
+- 拦截器正常执行流程
+![执行流程](pic/springmvcinterceptor1.png)
+- 拦截器异常中断执行流程
+![执行流程](pic/springmvcinterceptor2.png)
+- 拦截器的配置
+----
+    <!--配置自定义拦截器-->
+    <mvc:interceptors>
+        <!--方式一: 直接在这里配置<bean/>对所有Controller拦截-->
+        <bean class="xl.idea.springmvc.Interceptor.Interceptor1"/>
+        <!--方式二: 通过<mvc:interceptor/>来配置,同时可以指定要拦截的路径-->
+        <mvc:interceptor>
+            <!-- 指定要拦截的路径，这里可以写固定路径，也可以使用Ant风格通配符,/**代表就是任意层数任意路径了 -->
+            <mvc:mapping path="/**"/>
+            <bean class="xl.idea.springmvc.Interceptor.Interceptor2"/>
+        </mvc:interceptor>
+    </mvc:interceptors>
+
+- 测试拦截器的编写
+----
+    public class Interceptor1 implements HandlerInterceptor {
+
+        public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+                throws Exception {
+            System.out.println("**********我是拦截器1的前置处理方法。");
+            // 这里返回true，代表放行，如果是false，流程中断，不再执行后续的Controller中的方法了
+            return true;
+        }
+
+        public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+                            ModelAndView modelAndView) throws Exception {
+            System.out.println("**********我是拦截器1的后处理方法。我看到了View：" + modelAndView.getViewName());
+        }
+
+        public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+                throws Exception {
+            System.out.println("**********我是拦截器1的完成后处理方法。");
+        }
+    }
+
+- 拦截器总结
+    - 拦截器的前置方法顺序执行, 如果返回true, 继. 返回false, 流程终止, 倒序执行前面所有返回true的拦截器的完成方法.
+    - 拦截器的后置方法倒序执行, 在Controller执行结束后, 视图解析前执行.
+    - 拦截器的完成后方法倒序执行, 在视图解析后执行. 无论前面是否出错或返回false, 已经执行过的拦截器的完成方法都会被执行, 类似于finally.
+
+## <span id = '8'>8. SringMVC与Struts的区别</span>
+- SpringMVC的入口是Servlet, Struts2的入口是Filter, 两者的实现机制不同.
+- SpringMVC基于方法设计, 传递参数是通过方法形参, 其实现是单例模式(也可以改多例,默认单例), Struts2基于类设计, 传递参数是通过类的属性,只能是多例实现. 性能上SpringMVC更高一些
+- 参数传递方面,Struts2是用类的属性接收的,也就是在多个方法间共享, 而SpringMVC基于方法, 多个方法间不能共享.
 
 
 
