@@ -715,7 +715,7 @@
         <aop:advisor advice-ref="timerLogAdvice" pointcut-ref="myPointCut"/>
     </aop:config>
 
-- 配置`<aop:config>`后,获取出来的`customerService`和`productService`就已经是代理类了. TODO
+- 配置`<aop:config>`后,获取出来的`customerService`和`productService`就已经是代理类了. 
 - 切入点表达式的语法整理如下：
     - `bean(bean Id/bean name)` 
         - `bean(customerService)` 增强spring容器中定义id属性/name属性为customerService的bean中所有方法 
@@ -725,20 +725,167 @@
         - `execution(* *..*.*(..))` 返回类型任意, 任意包中及其子包中所有类, 类中所有方法, 参数任意
 
 
+## <span id = '15'>15. AspectJ切面编程</span>
+- **xml方式**
+- AspectJ提供不同的通知类型：
+    - Before 前置通知，相当于BeforeAdvice
+    - AfterReturning 后置通知，相当于AfterReturningAdvice
+    - Around 环绕通知，相当于MethodInterceptor
+    - AfterThrowing抛出通知，相当于ThrowAdvice
+    - After 最终final通知，不管是否异常，该通知都会执行
+    - DeclareParents 引介通知，相当于IntroductionInterceptor (不要求掌握)
+- 以前置通知为例子,每种通知都有自己不同的写法.
+- 第一步：确定目标对象，即确定bean对象:
+----
+    <!-- 1.确定了要增强的target对象 -->
+	<!-- 对于spring来说，目标对象：就是bean对象 -->
+	<!-- 基于接口类 -->
+	<bean id="customerService" class="xl.spring.a_proxy.CustomerServiceImpl"/>
+	<!-- 基于一般类 -->
+	<bean id="productService" class="xl.spring.a_proxy.ProductService"/>
+
+- 第二步：编写Before 并配置前置通知Advice增强:
+----
+    //aspectj的advice通知增强类，无需实现任何接口
+    public class MyAspect {
+        //前置通知
+        //普通的方法。方法名随便，但也不能太随便，一会要配置
+        public void firstbefore(){
+            System.out.println("------------第一个个前置通知执行了。。。");
+        }
+    }
+
+    <!--将前置通知配置到spring的容器中-->
+    <!-- 2.配置advice通知增强 -->
+    <bean id="myAspectAdvice" class="xl.spring.c_aspectjaop.MyAspect"/>
+
+- 配置切面与切入点, 让切入点关联通知
+----
+    <!-- 2.配置advice通知增强 -->
+	<bean id="myAspectAdvice" class="xl.spring.c_aspectjaop.MyAspect"/>
+	
+	<!-- 3：配置aop -->
+	<aop:config>
+		<!-- 切入点:拦截哪些bean的方法 -->
+		<aop:pointcut expression="bean(*Service)" id="myPointcut"/>
+		<!--
+			切面：要对哪些方法进行怎样的增强  
+			aop:aspect:aspejctj的方式！
+			ref:配置通知
+		-->
+		<aop:aspect ref="myAspectAdvice">
+			
+			<!-- 第一个前置通知 ：在访问目标对象方法之前，先执行通知的方法
+				method：advice类中的方法名，
+                pointcut-ref="myPointcut"：注入切入点
+                目的是让通知关联切入点
+			-->
+		    <aop:before method="firstbefore" pointcut-ref="myPointcut"/>
+		</aop:aspect>
+	</aop:config>
+
+- 各种Advice方法可接收的参数和返回值小结
+----
+| 通知类型               | 输入参数(可选)            | 返回值类型   |  其他             |
+|:----------------------|:-------------------------|:------------|:-----------------|
+| Before前置通知         | JoinPoint(静态连接点信息) | void        |                  |
+| AfterReturning后置通知 | JoinPoint, Object        | void        |                  |
+| Around环绕通知         | ProcessdingJoinPoint     | Object      | throws Throwable |
+| AfterThrowing抛出通知  | JoinPoint, Throwable     | void        |                  |
+| After最终通知          | JoinPoint                | void        |                  |
 
 
+- **注解方式**
+- 在切面的类, 通知方法上添加
+    - @AspectJ提供不同的通知类型
+    - @Before 前置通知，相当于BeforeAdvice
+    - @AfterReturning 后置通知，相当于AfterReturningAdvice
+    - @Around 环绕通知，相当于MethodInterceptor
+    - @AfterThrowing抛出通知，相当于ThrowAdvice
+    - @After 最终final通知，不管是否异常，该通知都会执行
+    - @DeclareParents 引介通知，相当于IntroductionInterceptor (不要求掌握)
 
-
-
-
-
-
-
-
-
-
-
-
+- 步骤一: 在xml中定义`customerService`和`productService`
+- 步骤二: 编写通知类，在通知类 添加@Aspect 注解，代表这是一个切面类,并将切面类交给spring管理（能被spring扫描到@Component）。
+----
+    @Component("aspectJAdvice")
+    @Aspect//相当于<aop:aspect ref = "aspectJAdvice">
+    public class AspectJAdvice {
+        //前置通知
+        //应用:权限控制(权限不足,抛出异常),记录方法调用信息日志
+        //参数:org.aspectj.lang.JointPoint,连接点对象,封装了方法,参数,目标对象
+        @Before("bean(*Service)")//<aop:before method="before" pointcut="bean(*Service)"/>
+        public void before(JoinPoint joinPoint){
+            //假设当前登录用户
+            String loginName = "Rose";
+            System.out.println("方法名称对象:"+joinPoint.getSignature().getName());
+            System.out.println("目标对象:"+joinPoint.getTarget().getClass().getSimpleName());
+            System.out.println("代理对象:"+joinPoint.getThis().getClass().getSimpleName());
+            
+            //判断用户有没有执行方法的权限
+            /*if("save".equals(joinPoint.getSignature().getName())){
+                //只有admin有权限
+                if(!"admin".equals(loginName)){
+                    throw new RuntimeException("您没有权限执行"+joinPoint.getSignature().getName()+"方法");
+                }
+            }*/
+        }
+        
+        //前置通知方案二:使用@Pointcut定义切入点
+        //切入点语法要求:private void 无参数,无方法体的方法,方法名为切入点的名称
+        //一个通知方法@Before可以使用多个切入点表达式，中间使用“||”符合分隔，用来表示多个切入点 
+        @Pointcut("bean(customerService)")//<aop:pointcut expression="bean(*Service)" id = "firstBefore"/>
+        private void firstBefore(){
+            System.out.println("----------第一个前置通知执行了-------------");
+        }
+        @Pointcut("bean(productService)")
+        private void firstBefore2(){
+            System.out.println("----------第二个前置通知执行了-------------");
+        }
+        //@Before("firstBefore()||firstBefore2()")
+        //@Before("bean(*Service)")//这样不也一样么....
+        //@Before("firstBefore()")
+        public void before2(JoinPoint joinPoint){
+            System.out.println("---------前置通知方案二------------");
+        }
+        
+        //后置通知
+        //应用:查询余额后,自动下发短信功能
+        //参数1:连接点对象性
+        //参数2:目标方法执行后的返回值,类型是object,参数名随便
+        @AfterReturning(value = "bean(*Service)",returning = "returnVal")
+        public void afterReturning(JoinPoint joinPoint,Object returnVal){
+            System.out.println("*****您账户余额不足,快给我充钱!我给你VIP100000000000000,好吧,其实还有"+returnVal+"块钱*****");
+        }
+        
+        //环绕通知
+        //应用:日志,缓存,权限,性能监控,事务管理
+        //参数:可以执行的连接点对象ProceedingJoinPoint,特点是调用proceed()方法可以随时随地地执行目标对象的方法(相当于目标对象的方法被执行了)
+        //必须返回Object 抛出Throwable
+        @Around("bean(*Service)")
+        public Object around(ProceedingJoinPoint pjp) throws Throwable{
+            System.out.println("-----事务开启了-----");
+            Object resultObject = pjp.proceed();//放行
+            System.out.println("-----事务提交了-----");
+            return resultObject;//返回对象执行的结果
+        }
+        
+        //抛出通知
+        //应用:处理异常,记录日志
+        //参数1:静态连接点(方法对象)
+        //参数2:目标方法抛出的异常
+        @AfterThrowing(value="bean(*Service)", throwing = "e")
+        public void afterThrowing(JoinPoint joinPoint, Throwable e){
+            System.out.println("管理员好!"+joinPoint.getTarget().getClass().getName()+"的方法:"+joinPoint.getSignature().getName()+"发生了异常,异常为:"+e.getMessage());
+        }
+        
+        //最终通知
+        //应用:释放资源,关闭文件,数据库,网络连接等....
+        @After("bean(*Service)")
+        public void after(JoinPoint joinPoint){
+            System.out.println("释放资源了,执行的方法是"+joinPoint.getSignature().getName());
+        }
+    }
 
 
 

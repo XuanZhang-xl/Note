@@ -23,6 +23,16 @@
 
 - 例子:
 ----
+    within(包.类)
+    within(cn.itcast.spring..*) 增强spring包和子包所有bean"所有方法"
+    
+    this(完整类型)/target(完整类型) 范围最小，只针对某个类型。
+    this(cn.itcast.spring.a_jdkproxy.CustomerServiceImpl) 增强类型所有方法（对代理对象有效）
+    target(cn.itcast.spring.a_jdkproxy.CustomerServiceImpl)增强类型所有方法（对目标对象有效）
+    注意：我们一般都对目标对象进行拦截，很少对代理对象进行拦截
+
+
+    
     1: modifiers-pattern? (非必填项): 表示方法的修饰符
     execution(public void xl.e_xml.a_before.UserServiceImpl.saveUser(java.lang.String,java.lang.String))
     * 表示: 共有方法, 无返回类型, xl.e_xml.a_before包中的UserServiceImpl类, 类中的saveUser方法, 参数2个, 都是String类型
